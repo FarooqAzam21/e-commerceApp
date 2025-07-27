@@ -18,7 +18,9 @@ function App() {
   const [showFavorite , setShowFavorite] = useState(false)
   const [alert , setAlert] = useState(null)
   const [showCartProducts , setshowCartProducts] = useState(false)
-  const [mode , setMode] = useState('light')
+  const [mode, setMode] = useState(() => {
+  return localStorage.getItem('mode') || 'light';
+});
   const [showForm , setShowForm] = useState(false)
   const [products, setProducts] = useState([])
   const [addToCart , setAddToCart] = useState([])
@@ -96,18 +98,26 @@ const handleStock = (id)=>{
   const viewCartProducts=()=>{
     setshowCartProducts((prev)=>!prev)
   }
-  const handleMode =()=>{
-    if(mode==='light'){
-      setMode('dark')
-      document.body.style.background = 'linear-gradient(to right ,rgb(107, 56, 56),rgb(54, 83, 98))';
-      showAlert("Dark Mode Enabled" , "success")
-    }
-    else{
-      setMode('light')
-      document.body.style.background = 'linear-gradient(to right,rgba(254, 254, 255, 0.66),rgb(101, 170, 205))';
-      showAlert("Dark Mode disabled" , "success")
-    }
+  useEffect(() => {
+  if (mode === 'dark') {
+    document.body.style.background = 'linear-gradient(to right ,rgb(107, 56, 56),rgb(54, 83, 98))';
+  } else {
+    document.body.style.background = 'linear-gradient(to right,rgba(254, 254, 255, 0.66),rgb(101, 170, 205))';
   }
+}, [mode]);
+
+ const handleMode = () => {
+  if (mode === 'light') {
+    setMode('dark');
+    localStorage.setItem('mode', 'dark');
+    showAlert("Dark Mode Enabled", "success");
+  } else {
+    setMode('light');
+    localStorage.setItem('mode', 'light');
+    showAlert("Dark Mode Disabled", "success");
+  }
+};
+
   return (
     <>
       <Navbar onFavorite={viewFavorite} onCart={viewCartProducts} title="Highfy Electronics" mode={mode} handleMode={handleMode}/>
