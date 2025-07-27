@@ -1,0 +1,58 @@
+/* Card container styling */
+.product-card {
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 15px;
+  margin: 10px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 300px;
+}
+
+/* Image styling */
+.product-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+/* Add space between cards in slider */
+.slick-slide {
+  padding: 0 10px;
+}
+
+/* Arrow button styles */
+.slick-prev, .slick-next {
+  z-index: 1;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: black;
+  font-size: 30px;
+  background: transparent !important;
+  border-radius: 50%;
+}
+
+/* Button */
+.nav-link {
+  position: relative;
+  transition: color 0.2s ease-in-out;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #007bff; /* Bootstrap primary or any color */
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
