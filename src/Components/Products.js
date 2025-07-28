@@ -1,4 +1,4 @@
-import React , {useState , useEffect}   from 'react'
+import React , {useState , useEffect , useRef}   from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import './slider.css'
@@ -9,19 +9,15 @@ import ProductPage from './ProductPage/ProductPage'
 export default function Products({showFavorite , showCartProducts , mode , alert , showAlert , setLoader ,loader}) {
   
     const sliderSettings = {
-    arrows: true,
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1
-        }
-      }
-    ]
+    dots: false,         
+  arrows: false,       
+  infinite: true,
+  speed: 500,
+  autoplay: true,     
+  autoplaySpeed: 2000,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  pauseOnHover: false,
   }
   
 const [displayMessage , setDisplayMessage] = useState(false)
@@ -37,7 +33,9 @@ const [showFilter, setShowFilter] = useState(false)
 const [showAppliances , setShowAppliances] = useState([])
 const [showMobiles , setShowMobiles] = useState([])
 const [showMobileFilterResults , setshowMobileFilterResults ] = useState(false)
+ const [visible, setVisible] = useState(false);
 const [showApplianceFilterResults , setshowApplianceFilterResults ] = useState(false)
+const ref = useRef()
 const navigate = useNavigate()
 const fetchProducts = async()=>{
   setLoader(true)
@@ -48,7 +46,20 @@ const fetchProducts = async()=>{
 useEffect(()=>{
   fetchProducts()
 }, [])
-
+useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 0.2,
+      }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => {
+      if (ref.current) observer.unobserve(ref.current);
+    };
+  }, []);
 const handleAddtoCart=(id)=>{
     if(addToCart.includes(id)){
         setAddToCart((prev)=>prev.filter((addtoCartid)=>addtoCartid !==id))
@@ -206,7 +217,7 @@ const handleStock = (id)=>{
     {showMobileFilterResults && 
       showMobiles.map((product) => (
         <div
-          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3"
+          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -319,7 +330,7 @@ const handleStock = (id)=>{
     {showApplianceFilterResults &&
       showAppliances.map((product) => (
         <div
-          className="card col-12 col-sm-6 col-md-4 col-lg-3 mx-3"
+          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -423,7 +434,7 @@ const handleStock = (id)=>{
     {showFilter &&
       filteredProduct.map((product) => (
         <div
-          className="card col-12 col-sm-6 col-md-4 col-lg-3 mx-3"
+          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -526,7 +537,7 @@ const handleStock = (id)=>{
     {showCartProducts &&
       cartProduct.map((product) => (
         <div
-          className="card col-12 col-sm-6 col-md-4 col-lg-3 mx-3"
+          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -632,7 +643,7 @@ const handleStock = (id)=>{
     {showFavorite &&
       favoriteproductsList.map((product) => (
         <div
-          className="card col-12 col-sm-6 col-md-4 col-lg-3 mx-3"
+          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -735,7 +746,7 @@ const handleStock = (id)=>{
     {showMobiles &&
       mobilesProduct.map((product) => (
         <div
-          className="card col-12 col-sm-6 col-md-4 col-lg-3 mx-3"
+          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -835,7 +846,7 @@ const handleStock = (id)=>{
     {showAppliances &&
       appliancesProduct.map((product) => (
         <div
-          className="card col-12 col-sm-6 col-md-4 col-lg-3 mx-3"
+          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
