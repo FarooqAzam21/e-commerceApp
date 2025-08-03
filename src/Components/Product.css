@@ -1,5 +1,7 @@
-/* Card container styling */
-.product-card {
+/* ---------------------------
+   Product Card Styling
+--------------------------- */
+.product-card-light {
   border: 1px solid #ddd;
   border-radius: 16px;
   padding: 15px;
@@ -8,37 +10,132 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   text-align: center;
   max-width: 300px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  background-color: #f9f9f9;
+  color: #000;
 }
-/* ProductCard.css */
+.product-card-dark {
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 15px;
+  margin: 10px;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 300px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  background-color: #1e1e1e;
+  color: #fff;
+  border: 1px solid #333;
+}
 
+/* Hover effects for card */
+.product-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Zoom image effect */
+.zoom-container {
+  overflow: hidden;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+.zoom-image {
+  transition: transform 0.3s ease;
+}
+.zoom-container:hover .zoom-image {
+  transform: scale(1.05);
+}
+
+/* ---------------------------
+   Fade-in Scroll Animation
+--------------------------- */
 .fade-in {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transition: all 0.7s ease-out;
 }
-
-.fade-in.show {
+.fade-in.visible {
   opacity: 1;
   transform: translateY(0);
 }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-/* Image styling */
+/* ---------------------------
+   Image Styling
+--------------------------- */
 .product-card img {
   max-width: 100%;
   height: auto;
   border-radius: 12px;
 }
 
-/* Add space between cards in slider */
+/* ---------------------------
+   Price & Title Styling
+--------------------------- */
+.card-price {
+  color: #3b1206;
+  font-weight: bold;
+  font-size: 24px;
+}
+.card-title {
+  font-weight: bold;
+  font-size: 20px;
+  transition: color 0.3s ease;
+}
+
+/* ---------------------------
+   Button Styling
+--------------------------- */
+.btn-primary {
+  transition: all 0.3s ease-in-out;
+}
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px #007bff;
+}
+.btn-primary:active {
+  transform: scale(0.98);
+  box-shadow: 0 0 5px #007bff;
+}
+
+/* ---------------------------
+   Navbar Link Underline
+--------------------------- */
+.nav-link {
+  position: relative;
+  transition: color 0.2s ease-in-out;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #007bff;
+  transition: width 0.3s ease-in-out;
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* ---------------------------
+   Slick Slider Custom Spacing
+--------------------------- */
 .slick-slide {
   padding: 0 10px;
 }
 
-/* Arrow button styles */
-.slick-prev, .slick-next {
+/* Arrow button styles (can be hidden or customized) */
+.slick-prev,
+.slick-next {
   z-index: 1;
 }
-
 .slick-prev:before,
 .slick-next:before {
   color: black;
@@ -47,73 +144,12 @@
   border-radius: 50%;
 }
 
-/* Button */
-.nav-link {
-  position: relative;
-  transition: color 0.2s ease-in-out;
+/* ---------------------------
+   Responsive Layout
+--------------------------- */
+@media screen and (max-width: 768px) {
+  .product-card {
+    max-width: 90%;
+    margin: 10px auto;
+  }
 }
-
-.nav-link::after {
-  content: '';
-  position: absolute;
-  width: 0%;
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: #007bff; /* Bootstrap primary or any color */
-  transition: width 0.3s ease-in-out;
-}
-
-.nav-link:hover::after {
-  width: 100%;
-}
-.product-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.product-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-}
-
-.zoom-container {
-  overflow: hidden;
-  border-radius: 10px;
-  transition: transform 0.3s ease;
-}
-
-.zoom-image {
-  transition: transform 0.3s ease;
-}
-
-.zoom-container:hover .zoom-image {
-  transform: scale(1.05);
-}
-
-.btn-primary {
-  transition: background-color 0.3s ease, transform 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3 !important;
-  transform: translateY(-2px);
-}
-
-.card-title {
-  font-weight: bold;
-  font-size: 20px;
-  transition: color 0.3s ease;
-}
-
-.fade-in {
-  animation: fadeIn 0.5s ease-in-out both;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-

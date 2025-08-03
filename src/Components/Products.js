@@ -6,7 +6,7 @@ import Slider from 'react-slick'
 import './Product.css'
 import ProductPage from './ProductPage/ProductPage'
 
-export default function Products({showFavorite , showCartProducts , mode , alert , showAlert , setLoader ,loader}) {
+export default function Products({showFavorite , showCartProducts , mode , alert , showAlert , setLoader ,loader , productCount , setProductCount}) {
   
     const sliderSettings = {
     dots: false,         
@@ -87,6 +87,7 @@ const handleFavorite =(id) =>{
     }
     else {
         setFavorite((prev)=> [...prev , id])
+
         setDisplayMessage((prev)=>!prev)
         showAlert("product added to Favorite" , "success")
         setTimeout(() => {
@@ -217,7 +218,7 @@ const handleStock = (id)=>{
     {showMobileFilterResults && 
       showMobiles.map((product) => (
         <div
-          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
+          className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -282,8 +283,13 @@ const handleStock = (id)=>{
                 </li>
               </ul>
             ))}
+            <div>
+              <button className='btn' style={{border: '5px'}} onClick={()=>setProductCount(productCount=== 0 ? 0 : productCount-1)}>-</button>
+              <button className='btn btn-secondary'>{productCount}</button>
+              <button className='btn' style={{border: '5px'}}onClick={()=>setProductCount(productCount > product.stock? showAlert("Cannot select more than stock" , "warning"): productCount+1)}>+</button>
+            </div>
 
-            <p style={{fontWeight: 'bold' ,fontSize: '28px' , color:'black'}}>${product.price}</p>
+            <p className='card-price'>${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
             <button
@@ -330,7 +336,7 @@ const handleStock = (id)=>{
     {showApplianceFilterResults &&
       showAppliances.map((product) => (
         <div
-          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
+          className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -395,8 +401,12 @@ const handleStock = (id)=>{
                 </li>
               </ul>
             ))}
-
-            <p style={{fontWeight: 'bold' , fontSize: '28px' , color:'black'}}>${product.price}</p>
+            <div>
+              <button className='btn' style={{border: '5px'}} onClick={()=>setProductCount(productCount=== 0 ? 0 : productCount-1)}>-</button>
+              <button className='btn btn-secondary'>{productCount}</button>
+              <button className='btn' style={{border: '5px'}}onClick={()=>setProductCount(productCount > product.stock? showAlert("Cannot select more than stock" , "warning"): productCount+1)}>+</button>
+            </div>
+            <p className='card-price' >${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
             <button
@@ -434,7 +444,7 @@ const handleStock = (id)=>{
     {showFilter &&
       filteredProduct.map((product) => (
         <div
-          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
+          className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -499,8 +509,13 @@ const handleStock = (id)=>{
                 </li>
               </ul>
             ))}
+            <div>
+              <button className='btn' style={{border: '5px'}} onClick={()=>setProductCount(productCount=== 0 ? 0 : productCount-1)}>-</button>
+              <button className='btn btn-secondary'>{productCount}</button>
+              <button className='btn' style={{border: '5px'}}onClick={()=>setProductCount(productCount > product.stock? showAlert("Cannot select more than stock" , "warning"): productCount+1)}>+</button>
+            </div>
 
-            <p style={{fontWeight: 'bold' , fontSize: '28px' , color:'black'}}>${product.price}</p>
+            <p className='card-price' >${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
             <button
@@ -537,7 +552,7 @@ const handleStock = (id)=>{
     {showCartProducts &&
       cartProduct.map((product) => (
         <div
-          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
+          className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -605,8 +620,13 @@ const handleStock = (id)=>{
                 </li>
               </ul>
             ))}
+            <div>
+              <button className='btn' style={{border: '5px'}} onClick={()=>setProductCount(productCount=== 0 ? 0 : productCount-1)}>-</button>
+              <button className='btn btn-secondary'>{productCount}</button>
+              <button className='btn' style={{border: '5px'}}onClick={()=>setProductCount(productCount > product.stock? showAlert("Cannot select more than stock" , "warning"): productCount+1)}>+</button>
+            </div>
 
-            <p style={{fontWeight: 'bold' ,fontSize: '28px' , color:'black'}}>${product.price}</p>
+            <p className='card-price' >${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
             <button
@@ -643,7 +663,7 @@ const handleStock = (id)=>{
     {showFavorite &&
       favoriteproductsList.map((product) => (
         <div
-          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
+          className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -709,8 +729,12 @@ const handleStock = (id)=>{
                 </li>
               </ul>
             ))}
-
-            <p style={{fontWeight: 'bold' , fontSize: '28px' , color:'black'}}>$product.price{}</p>
+            <div>
+              <button className='btn' style={{border: '5px'}} onClick={()=>setProductCount(productCount=== 0 ? 0 : productCount-1)}>-</button>
+              <button className='btn btn-secondary'>{productCount}</button>
+              <button className='btn' style={{border: '5px'}}onClick={()=>setProductCount(productCount > product.stock? showAlert("Cannot select more than stock" , "warning"): productCount+1)}>+</button>
+            </div>
+            <p className='card-price' >${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
             <button
@@ -746,7 +770,7 @@ const handleStock = (id)=>{
     {showMobiles &&
       mobilesProduct.map((product) => (
         <div
-          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
+          className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -811,8 +835,12 @@ const handleStock = (id)=>{
                 </li>
               </ul>
             ))}
-
-            <p style={{fontWeight: 'bold' , fontSize: '28px' , color:'black' }}>${product.price}</p>
+            <div>
+              <button className='btn' style={{border: '5px'}} onClick={()=>setProductCount(productCount=== 0 ? 0 : productCount-1)}>-</button>
+              <button className='btn btn-secondary'>{productCount}</button>
+              <button className='btn' style={{border: '5px'}}onClick={()=>setProductCount(productCount > product.stock? showAlert("Cannot select more than stock" , "warning"): productCount+1)}>+</button>
+            </div>
+            <p className='card-price'>${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
             <button
@@ -846,7 +874,7 @@ const handleStock = (id)=>{
     {showAppliances &&
       appliancesProduct.map((product) => (
         <div
-          className="product-card col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in"
+          className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
           key={product.id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
@@ -911,8 +939,13 @@ const handleStock = (id)=>{
                 </li>
               </ul>
             ))}
+            <div>
+              <button className='btn' style={{border: '5px'}} onClick={()=>setProductCount(productCount=== 0 ? 0 : productCount-1)}>-</button>
+              <button className='btn btn-secondary'>{productCount}</button>
+              <button className='btn' style={{border: '5px'}}onClick={()=>setProductCount(productCount > product.stock? showAlert("Cannot select more than stock" , "warning"): productCount+1)}>+</button>
+            </div>
 
-            <p style={{fontWeight: 'bold' , fontSize: '28px' , color:'black' }}>${product.price}</p>
+            <p className='card-price'>${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
             <button

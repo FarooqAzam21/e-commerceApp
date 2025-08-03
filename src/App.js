@@ -13,14 +13,17 @@ import {Routes , Link , Route } from 'react-router-dom';
 import ProductPage from './Components/ProductPage/ProductPage';
 import AddProduct from './Components/AddProduct';
 import RelatedProducts from './Components/RelatedProduct/RelatedProducts';
+import { use } from 'react';
 
 function App() {
   const [showFavorite , setShowFavorite] = useState(false)
   const [alert , setAlert] = useState(null)
   const [showCartProducts , setshowCartProducts] = useState(false)
   const [mode, setMode] = useState(() => {
-  return localStorage.getItem('mode') || 'light';
+  return localStorage.getItem('mode') && 'light';
 });
+  const [open , isOpen]=useState(false)
+  const[productCount , setProductCount] = useState(1)
   const [showForm , setShowForm] = useState(false)
   const [products, setProducts] = useState([])
   const [addToCart , setAddToCart] = useState([])
@@ -91,6 +94,7 @@ const handleStock = (id)=>{
       message : message,
       type: type
     })
+    isOpen(prev=> !prev)
   }
   const viewFavorite=()=>{
     setShowFavorite((prev)=>!prev)
@@ -116,18 +120,20 @@ const handleStock = (id)=>{
     localStorage.setItem('mode', 'light');
     showAlert("Dark Mode Disabled", "success");
   }
-};
+}
 
   return (
     <>
       <Navbar onFavorite={viewFavorite} onCart={viewCartProducts} title="Highfy Electronics" mode={mode} handleMode={handleMode}/>
-      <Alert alert={alert} showAlert={showAlert} loader={loader}/>
+        <Alert alert={alert} showAlert={showAlert} loader={loader} open={open} isOpen={isOpen}/>
       <Routes>
   <Route path='/' element={
     <>
       <Banner />
       <Products 
         setLoader={setLoader}
+        productCount={productCount}
+        setProductCount={setProductCount}
         loader={loader}
         product={products}
         showFavorite={showFavorite} 
@@ -144,6 +150,8 @@ const handleStock = (id)=>{
   <Route path='/products' element={
     <Products 
       setLoader={setLoader}
+      productCount={productCount}
+      setProductCount={setProductCount}
       loader={loader}
       product={products}
       showFavorite={showFavorite} 
@@ -158,6 +166,7 @@ const handleStock = (id)=>{
 
   <Route path='/product/:id' element={
     <ProductPage
+      productCount={productCount}
       mode={mode}
       products={products}
       handleFavorite={handleFavorite}

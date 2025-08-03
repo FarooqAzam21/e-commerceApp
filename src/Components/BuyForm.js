@@ -1,6 +1,6 @@
 import React from 'react'
 import {useForm} from 'react-hook-form'
-export default function BuyForm({product , onClose}) {
+export default function BuyForm({product , onClose , productCount}) {
   const {register , handleSubmit , reset , formState: {errors }} = useForm();
     const handleCreate=(data)=>{
         onClose()
@@ -33,16 +33,10 @@ export default function BuyForm({product , onClose}) {
             
         </div>
         <div style={{color: "red"}}>{errors.address?.message}</div>
-        <div className="mb-3">
-            <label htmlFor="exampleAddress" className="form-label">Password</label>
-            <input type="text" className="form-control" id="password" aria-describedby=""
-            {...register("Password",{required:"Password is required" , 
-            pattern: {value: /^(?=.*[0-9]).{8,}$/, message:"Password must contain atleast one number"},
-            minLength:{value: 8 , message: "Passwork must contain 8 characyers"}})}/>
-            
+        <div className="mb-3">  
         </div>
         <div style={{color: "red"}}>{errors.password?.message}</div>
-        <h3>${product.price}</h3>
+        <h3>${Number(product.price || 0) * Number(productCount || 1)}</h3>
 
         <button type="submit" className="btn btn-secondary">Place Order</button>
         <button type="button" style={{marginLeft: '10px'}} className="btn btn-secondary"onClick={onClose}>Cancel</button>

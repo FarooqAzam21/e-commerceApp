@@ -7,7 +7,7 @@ import "slick-carousel/slick/slick-theme.css";
 import BuyForm from '../BuyForm';
 import RelatedProducts from '../RelatedProduct/RelatedProducts';
 
-export default function ProductPage({ products, handleStock, handleFavorite, handleAddToCart, mode, favorite, cart, selectedProduct }) {
+export default function ProductPage({ products, handleStock, handleFavorite, handleAddToCart, mode, favorite, cart, selectedProduct , productCount}) {
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
   const slider1 = useRef();
@@ -22,9 +22,11 @@ export default function ProductPage({ products, handleStock, handleFavorite, han
   const inCart = cart.includes(product.id);
 
   const mainSettings = {
-    arrows: true,
+    arrows: false,
     asNavFor: nav2,
     ref: slider1,
+    dots: false,                
+    
   };
 
   const thumbSettings = {
@@ -35,10 +37,16 @@ export default function ProductPage({ products, handleStock, handleFavorite, han
     ref: slider2,
     arrows: false,
     centerMode: true,
+    infinite: true,
+    speed: 500,
+    autoplay: true,     
+    autoplaySpeed: 2000,
+    slidesToScroll: 1,
+    pauseOnHover: false,
   };
 
   return (
-    <div className={`container my-5 ${mode === 'dark' ? 'bg-dark text-white' : ''}`}>
+    <div className={`container my-5 ${mode === 'dark' ? 'bg-dark text-white' : 'bg-light text-dark'}`}>
       <div className="row">
         {/* Image Carousel */}
         <div className="col-md-6" style={{ height: '50%' }}>
@@ -62,14 +70,14 @@ export default function ProductPage({ products, handleStock, handleFavorite, han
 
         {/* Product Info */}
         <div className="col-md-6">
-          <h2>{product.title}</h2>
-          <p style={{ color: mode === "light" ? "black" : "white" }}>{product.description}</p>
-          <ul>
+          <h2>{product.title} Quntity {productCount}</h2>
+          <p className={`${mode === 'dark' ? 'text-white' : 'text-dark'}`}>{product.description}</p>
+          <ul className={`${mode === 'dark' ? 'text-light' : 'text-dark'}`}>
             {product.features.map((f, i) => (
               <li key={i}>{f}</li>
             ))}
           </ul>
-          <h4 style={{ fontWeight: 'bold', color: mode === 'light' ? 'blue' : 'white' }}>${product.price}</h4>
+          <h4 className={`fw-bold ${mode === 'dark' ? 'text-white' : 'text-primary'}`}>${product.price*productCount}</h4>
           <p className="text-success">Stock Available: {product.stock}</p>
 
           <button
@@ -97,7 +105,7 @@ export default function ProductPage({ products, handleStock, handleFavorite, han
 
           {selectedProduct?.id === product.id && (
             <div className="mt-3">
-              <BuyForm product={selectedProduct} />
+              <BuyForm product={selectedProduct} productCount={productCount} />
             </div>
           )}
         </div>
@@ -105,6 +113,7 @@ export default function ProductPage({ products, handleStock, handleFavorite, han
 
       {/* Related Products Below */}
       <RelatedProducts
+        productCount={productCount}
         selectedProduct={selectedProduct}
         products={products}
         mode={mode}
