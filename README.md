@@ -68,3 +68,32 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# 🛍️ E-Commerce React App
+
+A modern e-commerce platform built with React — includes product management, dark mode, chatbot support, and a responsive UI.
+
+## 🚀 Features
+- 🌓 Dark/Light mode toggle
+- 💬 AI Chatbot support
+- 🛒 Product listing with real-time quantity counter
+- 📦 Buy form with validation
+- 📱 Responsive design
+- ⚡ Smooth animations
+
+## 🖼️ Screenshots
+*(Add some screenshots or a short demo GIF)*
+
+## 🔧 Technologies
+- React
+- React Hook Form
+- Bootstrap
+- CSS3
+- Node.js (if applicable)
+
+## 📦 Run Locally
+```bash
+git clone https://github.com/FarooqAzam21/your-repo-name.git
+cd your-repo-name
+npm install
+npm start
