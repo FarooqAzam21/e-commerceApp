@@ -93,7 +93,7 @@ A modern e-commerce platform built with React — includes product management, d
 
 ## 📦 Run Locally
 ```bash
-git clone https://github.com/FarooqAzam21/your-repo-name.git
+git clone https://github.com/FarooqAzam21/e-commerce-app.git
 cd your-repo-name
 npm install
 npm start
