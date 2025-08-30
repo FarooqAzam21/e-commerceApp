@@ -1,6 +1,6 @@
 import React , {useState , useEffect , useRef}   from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './slider.css'
 import Slider from 'react-slick'
 import './Product.css'
@@ -73,7 +73,7 @@ const handleAddtoCart=(id)=>{
 }, 5000);
     }
     const updated = products.map((product)=>{
-        if(product.id === id && product.stock>0){
+        if(product._id === id && product.stock>0){
             return{...product , stock: product.stock-1}
         }
         return product
@@ -119,7 +119,7 @@ const handlefFilterButton=()=>{
 }
 const handleStock = (id)=>{
     const updated = products.map(product =>{
-        if(product.id === id && product.stock > 0){
+        if(product._id === id && product.stock > 0){
             return {...product, stock: product.stock -1  }
             }
             return product;
@@ -219,7 +219,7 @@ const handleStock = (id)=>{
       showMobiles.map((product) => (
         <div
           className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
-          key={product.id}
+          key={product._id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
             position: "relative",
@@ -229,44 +229,65 @@ const handleStock = (id)=>{
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 2, padding: '10px', display: 'flex', justifyContent: 'space-between' }}>
               {/* Favorite Button */}
               <button
-                onClick={() => handleFavorite(product.id)}
+                onClick={() => handleFavorite(product._id)}
                 style={{
                   border: "none",
                   background: "transparent",
                   fontSize: "20px",
-                  color: favorite.includes(product.id) ? "red" : "black",
+                  color: favorite.includes(product._id) ? "red" : "black",
                 }}
               >
-                {favorite.includes(product.id) ? "❤️" : "🤍"}
+                {favorite.includes(product._id) ? "❤️" : "🤍"}
               </button>
 
               {/* Cart Button */}
               <button
-                onClick={() => handleAddtoCart(product.id)}
+                onClick={() => handleAddtoCart(product._id)}
                 style={{
                   border: "none",
                   background: "transparent",
                   fontSize: "20px",
-                  color: addToCart.includes(product.id) ? "blue" : "black",
+                  color: addToCart.includes(product._id) ? "blue" : "black",
                 }}
               >
-                {addToCart.includes(product.id) ? "✅" : "🛒"}
+                {addToCart.includes(product._id) ? "✅" : "🛒"}
               </button>
             </div>
 
-          <Slider {...sliderSettings}>
-            {product.images.map((img, index) => (
-              <div className="zoom-container">
-                <img
-                className="zoom-image"
-                key={index}
-                src={img}
-                alt={`product ${index}`}
-                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '10px' }}
-              />
-              </div>
-            ))}
-          </Slider>
+          {product.images.length > 1 ? (
+  <Slider {...sliderSettings}>
+    {product.images.map((img, index) => (
+      <div className="zoom-container" key={index}>
+        <img
+          className="zoom-image"
+          src={img}
+          alt={`product ${index}`}
+          style={{
+            width: '100%',
+            height: '200px',
+            objectFit: 'cover',
+            borderRadius: '10px'
+          }}
+        />
+      </div>
+    ))}
+  </Slider>
+) : (
+  <div className="zoom-container">
+    <img
+      className="zoom-image"
+      src={product.images[0]}
+      alt="product"
+      style={{
+        width: '100%',
+        height: '200px',
+        objectFit: 'cover',
+        borderRadius: '10px'
+      }}
+    />
+  </div>
+)}
+
 
           <div className="card-body">
             <h5 className="card-title" style={{ color: mode === "light" ? "black" : "white" }}>
@@ -292,18 +313,22 @@ const handleStock = (id)=>{
             <p className='card-price'>${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
-            <button
+            <Link to={`/product/${product._id}`}>
+              <Link to={`/product/${product._id}`}>
+              <button
               className="btn btn-primary w-100"
               disabled={product.stock === 0}
               style={{
                 backgroundColor: mode === "light" ? "blue" : "#d9ad9c",
               }}
-              onClick={() => handleStock(product.id)}
+              onClick={() => handleStock(product._id)}
             >
               {product.stock === 0 ? "Out of Stock" : "Buy Now"}
             </button>
+            </Link>
+            </Link>
 
-            {showForm && selectedProduct?.id === product.id && (
+            {showForm && selectedProduct?.id === product._id && (
               <div className="mt-3">
                 <ProductPage
                   selectedProduct={selectedProduct} 
@@ -337,7 +362,7 @@ const handleStock = (id)=>{
       showAppliances.map((product) => (
         <div
           className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
-          key={product.id}
+          key={product._id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
             position: "relative",
@@ -347,44 +372,65 @@ const handleStock = (id)=>{
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 2, padding: '10px', display: 'flex', justifyContent: 'space-between' }}>
               {/* Favorite Button */}
               <button
-                onClick={() => handleFavorite(product.id)}
+                onClick={() => handleFavorite(product._id)}
                 style={{
                   border: "none",
                   background: "transparent",
                   fontSize: "20px",
-                  color: favorite.includes(product.id) ? "red" : "black",
+                  color: favorite.includes(product._id) ? "red" : "black",
                 }}
               >
-                {favorite.includes(product.id) ? "❤️" : "🤍"}
+                {favorite.includes(product._id) ? "❤️" : "🤍"}
               </button>
 
               {/* Cart Button */}
               <button
-                onClick={() => handleAddtoCart(product.id)}
+                onClick={() => handleAddtoCart(product._id)}
                 style={{
                   border: "none",
                   background: "transparent",
                   fontSize: "20px",
-                  color: addToCart.includes(product.id) ? "blue" : "black",
+                  color: addToCart.includes(product._id) ? "blue" : "black",
                 }}
               >
-                {addToCart.includes(product.id) ? "✅" : "🛒"}
+                {addToCart.includes(product._id) ? "✅" : "🛒"}
               </button>
             </div>
 
-          <Slider {...sliderSettings}>
-            {product.images.map((img, index) => (
-              <div className="zoom-container">
-                <img
-                className="zoom-image"
-                key={index}
-                src={img}
-                alt={`product ${index}`}
-                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '10px' }}
-              />
-              </div>
-            ))}
-          </Slider>
+          {product.images.length > 1 ? (
+  <Slider {...sliderSettings}>
+    {product.images.map((img, index) => (
+      <div className="zoom-container" key={index}>
+        <img
+          className="zoom-image"
+          src={img}
+          alt={`product ${index}`}
+          style={{
+            width: '100%',
+            height: '200px',
+            objectFit: 'cover',
+            borderRadius: '10px'
+          }}
+        />
+      </div>
+    ))}
+  </Slider>
+) : (
+  <div className="zoom-container">
+    <img
+      className="zoom-image"
+      src={product.images[0]}
+      alt="product"
+      style={{
+        width: '100%',
+        height: '200px',
+        objectFit: 'cover',
+        borderRadius: '10px'
+      }}
+    />
+  </div>
+)}
+
 
           <div className="card-body">
             <h5 className="card-title" style={{ color: mode === "light" ? "black" : "white" }}>
@@ -409,18 +455,20 @@ const handleStock = (id)=>{
             <p className='card-price' >${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
-            <button
+            <Link to={`/product/${product._id}`}>
+              <button
               className="btn btn-primary w-100"
               disabled={product.stock === 0}
               style={{
                 backgroundColor: mode === "light" ? "blue" : "#d9ad9c",
               }}
-              onClick={() => handleStock(product.id)}
+              onClick={() => handleStock(product._id)}
             >
               {product.stock === 0 ? "Out of Stock" : "Buy Now"}
             </button>
+            </Link>
 
-            {showForm && selectedProduct?.id === product.id && (
+            {showForm && selectedProduct?.id === product._id && (
               <div className="mt-3">
                 
               </div>
@@ -445,7 +493,7 @@ const handleStock = (id)=>{
       filteredProduct.map((product) => (
         <div
           className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
-          key={product.id}
+          key={product._id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
             position: "relative",
@@ -455,44 +503,65 @@ const handleStock = (id)=>{
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 2, padding: '10px', display: 'flex', justifyContent: 'space-between' }}>
               {/* Favorite Button */}
               <button
-                onClick={() => handleFavorite(product.id)}
+                onClick={() => handleFavorite(product._id)}
                 style={{
                   border: "none",
                   background: "transparent",
                   fontSize: "20px",
-                  color: favorite.includes(product.id) ? "red" : "black",
+                  color: favorite.includes(product._id) ? "red" : "black",
                 }}
               >
-                {favorite.includes(product.id) ? "❤️" : "🤍"}
+                {favorite.includes(product._id) ? "❤️" : "🤍"}
               </button>
 
               {/* Cart Button */}
               <button
-                onClick={() => handleAddtoCart(product.id)}
+                onClick={() => handleAddtoCart(product._id)}
                 style={{
                   border: "none",
                   background: "transparent",
                   fontSize: "20px",
-                  color: addToCart.includes(product.id) ? "blue" : "black",
+                  color: addToCart.includes(product._id) ? "blue" : "black",
                 }}
               >
-                {addToCart.includes(product.id) ? "✅" : "🛒"}
+                {addToCart.includes(product._id) ? "✅" : "🛒"}
               </button>
             </div>
 
-          <Slider {...sliderSettings}>
-            {product.images.map((img, index) => (
-              <div className="zoom-container">
-                <img
-                className="zoom-image"
-                key={index}
-                src={img}
-                alt={`product ${index}`}
-                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '10px' }}
-              />
-              </div>
-            ))}
-          </Slider>
+          {product.images.length > 1 ? (
+  <Slider {...sliderSettings}>
+    {product.images.map((img, index) => (
+      <div className="zoom-container" key={index}>
+        <img
+          className="zoom-image"
+          src={img}
+          alt={`product ${index}`}
+          style={{
+            width: '100%',
+            height: '200px',
+            objectFit: 'cover',
+            borderRadius: '10px'
+          }}
+        />
+      </div>
+    ))}
+  </Slider>
+) : (
+  <div className="zoom-container">
+    <img
+      className="zoom-image"
+      src={product.images[0]}
+      alt="product"
+      style={{
+        width: '100%',
+        height: '200px',
+        objectFit: 'cover',
+        borderRadius: '10px'
+      }}
+    />
+  </div>
+)}
+
 
           <div className="card-body">
             <h5 className="card-title" style={{ color: mode === "light" ? "black" : "white" }}>
@@ -518,18 +587,20 @@ const handleStock = (id)=>{
             <p className='card-price' >${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
-            <button
+            <Link to={`/product/${product._id}`}>
+              <button
               className="btn btn-primary w-100"
               disabled={product.stock === 0}
               style={{
                 backgroundColor: mode === "light" ? "blue" : "#d9ad9c",
               }}
-              onClick={() => handleStock(product.id)}
+              onClick={() => handleStock(product._id)}
             >
               {product.stock === 0 ? "Out of Stock" : "Buy Now"}
             </button>
+            </Link>
 
-            {showForm && selectedProduct?.id === product.id && (
+            {showForm && selectedProduct?.id === product._id && (
               <div className="mt-3">
                  <ProductPage selectedProduct={selectedProduct} products={products} mode={mode} favorite={favorite} cart={cartProduct} handleFavorite={handleFavorite} handleAddtoCart={handleAddtoCart} ></ProductPage>
               </div>
@@ -553,7 +624,7 @@ const handleStock = (id)=>{
       cartProduct.map((product) => (
         <div
           className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
-          key={product.id}
+          key={product._id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
             position: "relative",
@@ -562,7 +633,7 @@ const handleStock = (id)=>{
         >
           {/* Favorite Button */}
           <button
-            onClick={() => handleFavorite(product.id)}
+            onClick={() => handleFavorite(product._id)}
             style={{
               position: "absolute",
               top: "10px",
@@ -572,12 +643,12 @@ const handleStock = (id)=>{
               fontSize: "20px",
             }}
           >
-            {favorite.includes(product.id) ? "❤️" : "🤍"}
+            {favorite.includes(product._id) ? "❤️" : "🤍"}
           </button>
 
           {/* Cart Button */}
           <button
-            onClick={() => handleAddtoCart(product.id)}
+            onClick={() => handleAddtoCart(product._id)}
             style={{
               position: "absolute",
               top: "10px",
@@ -585,25 +656,46 @@ const handleStock = (id)=>{
               border: "none",
               background: "transparent",
               fontSize: "20px",
-              color: addToCart.includes(product.id) ? "blue" : "black",
+              color: addToCart.includes(product._id) ? "blue" : "black",
             }}
           >
-            {addToCart.includes(product.id) ? "✅" : "🛒"}
+            {addToCart.includes(product._id) ? "✅" : "🛒"}
           </button>
 
-          <Slider {...sliderSettings}>
-            {product.images.map((img, index) => (
-              <div className="zoom-container">
-                <img
-                className="zoom-image"
-                key={index}
-                src={img}
-                alt={`product ${index}`}
-                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '10px' }}
-              />
-              </div>
-            ))}
-          </Slider>
+          {product.images.length > 1 ? (
+  <Slider {...sliderSettings}>
+    {product.images.map((img, index) => (
+      <div className="zoom-container" key={index}>
+        <img
+          className="zoom-image"
+          src={img}
+          alt={`product ${index}`}
+          style={{
+            width: '100%',
+            height: '200px',
+            objectFit: 'cover',
+            borderRadius: '10px'
+          }}
+        />
+      </div>
+    ))}
+  </Slider>
+) : (
+  <div className="zoom-container">
+    <img
+      className="zoom-image"
+      src={product.images[0]}
+      alt="product"
+      style={{
+        width: '100%',
+        height: '200px',
+        objectFit: 'cover',
+        borderRadius: '10px'
+      }}
+    />
+  </div>
+)}
+
 
           <div className="card-body">
             <h5 className="card-title" style={{ color: mode === "light" ? "black" : "white" }}>
@@ -629,18 +721,20 @@ const handleStock = (id)=>{
             <p className='card-price' >${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
-            <button
+            <Link to={`/product/${product._id}`}>
+              <button
               className="btn btn-primary w-100"
               disabled={product.stock === 0}
               style={{
                 backgroundColor: mode === "light" ? "blue" : "#d9ad9c",
               }}
-              onClick={() => handleStock(product.id)}
+              onClick={() => handleStock(product._id)}
             >
               {product.stock === 0 ? "Out of Stock" : "Buy Now"}
             </button>
+            </Link>
 
-            {showForm && selectedProduct?.id === product.id && (
+            {showForm && selectedProduct?.id === product._id && (
               <div className="mt-3">
                  <ProductPage selectedProduct={selectedProduct} products={products} mode={mode} favorite={favorite} cart={cartProduct} handleFavorite={handleFavorite} handleAddtoCart={handleAddtoCart} ></ProductPage>
               </div>
@@ -664,7 +758,7 @@ const handleStock = (id)=>{
       favoriteproductsList.map((product) => (
         <div
           className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
-          key={product.id}
+          key={product._id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
             position: "relative",
@@ -675,44 +769,65 @@ const handleStock = (id)=>{
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 2, padding: '10px', display: 'flex', justifyContent: 'space-between' }}>
               {/* Favorite Button */}
               <button
-                onClick={() => handleFavorite(product.id)}
+                onClick={() => handleFavorite(product._id)}
                 style={{
                   border: "none",
                   background: "transparent",
                   fontSize: "20px",
-                  color: favorite.includes(product.id) ? "red" : "black",
+                  color: favorite.includes(product._id) ? "red" : "black",
                 }}
               >
-                {favorite.includes(product.id) ? "❤️" : "🤍"}
+                {favorite.includes(product._id) ? "❤️" : "🤍"}
               </button>
 
               {/* Cart Button */}
               <button
-                onClick={() => handleAddtoCart(product.id)}
+                onClick={() => handleAddtoCart(product._id)}
                 style={{
                   border: "none",
                   background: "transparent",
                   fontSize: "20px",
-                  color: addToCart.includes(product.id) ? "blue" : "black",
+                  color: addToCart.includes(product._id) ? "blue" : "black",
                 }}
               >
-                {addToCart.includes(product.id) ? "✅" : "🛒"}
+                {addToCart.includes(product._id) ? "✅" : "🛒"}
               </button>
             </div>
 
-          <Slider {...sliderSettings}>
-            {product.images.map((img, index) => (
-              <div className="zoom-container">
-                <img
-                className="zoom-image"
-                key={index}
-                src={img}
-                alt={`product ${index}`}
-                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '10px' }}
-              />
-              </div>
-            ))}
-          </Slider>
+          {product.images.length > 1 ? (
+  <Slider {...sliderSettings}>
+    {product.images.map((img, index) => (
+      <div className="zoom-container" key={index}>
+        <img
+          className="zoom-image"
+          src={img}
+          alt={`product ${index}`}
+          style={{
+            width: '100%',
+            height: '200px',
+            objectFit: 'cover',
+            borderRadius: '10px'
+          }}
+        />
+      </div>
+    ))}
+  </Slider>
+) : (
+  <div className="zoom-container">
+    <img
+      className="zoom-image"
+      src={product.images[0]}
+      alt="product"
+      style={{
+        width: '100%',
+        height: '200px',
+        objectFit: 'cover',
+        borderRadius: '10px'
+      }}
+    />
+  </div>
+)}
+
 
           <div className="card-body">
             <h5 className="card-title" style={{ color: mode === "light" ? "black" : "white" }}>
@@ -737,18 +852,20 @@ const handleStock = (id)=>{
             <p className='card-price' >${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
-            <button
+            <Link to={`/product/${product._id}`}>
+              <button
               className="btn btn-primary w-100"
               disabled={product.stock === 0}
               style={{
                 backgroundColor: mode === "light" ? "blue" : "#d9ad9c",
               }}
-              onClick={() => handleStock(product.id)}
+              onClick={() => handleStock(product._id)}
             >
               {product.stock === 0 ? "Out of Stock" : "Buy Now"}
             </button>
+            </Link>
 
-            {showForm && selectedProduct?.id === product.id && (
+            {showForm && selectedProduct?.id === product._id && (
               <div className="mt-3">
                  <ProductPage selectedProduct={selectedProduct} products={products} mode={mode} favorite={favorite} cart={cartProduct} handleFavorite={handleFavorite} handleAddtoCart={handleAddtoCart} ></ProductPage>
               </div>
@@ -771,7 +888,7 @@ const handleStock = (id)=>{
       mobilesProduct.map((product) => (
         <div
           className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
-          key={product.id}
+          key={product._id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
             position: "relative",
@@ -781,44 +898,65 @@ const handleStock = (id)=>{
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 2, padding: '10px', display: 'flex', justifyContent: 'space-between' }}>
               {/* Favorite Button */}
               <button
-                onClick={() => handleFavorite(product.id)}
+                onClick={() => handleFavorite(product._id)}
                 style={{
                   border: "none",
                   background: "transparent",
                   fontSize: "20px",
-                  color: favorite.includes(product.id) ? "red" : "black",
+                  color: favorite.includes(product._id) ? "red" : "black",
                 }}
               >
-                {favorite.includes(product.id) ? "❤️" : "🤍"}
+                {favorite.includes(product._id) ? "❤️" : "🤍"}
               </button>
 
               {/* Cart Button */}
               <button
-                onClick={() => handleAddtoCart(product.id)}
+                onClick={() => handleAddtoCart(product._id)}
                 style={{
                   border: "none",
                   background: "transparent",
                   fontSize: "20px",
-                  color: addToCart.includes(product.id) ? "blue" : "black",
+                  color: addToCart.includes(product._id) ? "blue" : "black",
                 }}
               >
-                {addToCart.includes(product.id) ? "✅" : "🛒"}
+                {addToCart.includes(product._id) ? "✅" : "🛒"}
               </button>
             </div>
 
-          <Slider {...sliderSettings}>
-            {product.images.map((img, index) => (
-              <div className="zoom-container">
-                <img
-                className="zoom-image"
-                key={index}
-                src={img}
-                alt={`product ${index}`}
-                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '10px' }}
-              />
-              </div>
-            ))}
-          </Slider>
+          {product.images.length > 1 ? (
+  <Slider {...sliderSettings}>
+    {product.images.map((img, index) => (
+      <div className="zoom-container" key={index}>
+        <img
+          className="zoom-image"
+          src={img}
+          alt={`product ${index}`}
+          style={{
+            width: '100%',
+            height: '200px',
+            objectFit: 'cover',
+            borderRadius: '10px'
+          }}
+        />
+      </div>
+    ))}
+  </Slider>
+) : (
+  <div className="zoom-container">
+    <img
+      className="zoom-image"
+      src={product.images[0]}
+      alt="product"
+      style={{
+        width: '100%',
+        height: '200px',
+        objectFit: 'cover',
+        borderRadius: '10px'
+      }}
+    />
+  </div>
+)}
+
 
           <div className="card-body">
             <h5 className="card-title" style={{ color: mode === "light" ? "black" : "white" }}>
@@ -843,18 +981,20 @@ const handleStock = (id)=>{
             <p className='card-price'>${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
-            <button
+            <Link to={`/product/${product._id}`}>
+              <button
               className="btn btn-primary w-100"
               disabled={product.stock === 0}
               style={{
                 backgroundColor: mode === "light" ? "blue" : "#d9ad9c",
               }}
-              onClick={() => handleStock(product.id)}
+              onClick={() => handleStock(product._id)}
             >
               {product.stock === 0 ? "Out of Stock" : "Buy Now"}
             </button>
+            </Link>
 
-            {showForm && selectedProduct?.id === product.id && (
+            {showForm && selectedProduct?.id === product._id && (
               <div className="mt-3">
                  <ProductPage selectedProduct={selectedProduct} products={products} mode={mode} favorite={favorite} cart={cartProduct} handleFavorite={handleFavorite} handleAddtoCart={handleAddtoCart} ></ProductPage>
               </div>
@@ -875,7 +1015,7 @@ const handleStock = (id)=>{
       appliancesProduct.map((product) => (
         <div
           className={`product-card-${mode} col-12 col-sm-6 col-md-4 col-lg-3 mx-3 fade-in`}
-          key={product.id}
+          key={product._id}
           style={{
             backgroundColor: mode === "light" ? "white" : "#8b8b8b",
             position: "relative",
@@ -885,44 +1025,65 @@ const handleStock = (id)=>{
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 2, padding: '10px', display: 'flex', justifyContent: 'space-between' }}>
               {/* Favorite Button */}
               <button
-                onClick={() => handleFavorite(product.id)}
+                onClick={() => handleFavorite(product._id)}
                 style={{
                   border: "none",
                   background: "transparent",
                   fontSize: "20px",
-                  color: favorite.includes(product.id) ? "red" : "black",
+                  color: favorite.includes(product._id) ? "red" : "black",
                 }}
               >
-                {favorite.includes(product.id) ? "❤️" : "🤍"}
+                {favorite.includes(product._id) ? "❤️" : "🤍"}
               </button>
 
               {/* Cart Button */}
               <button
-                onClick={() => handleAddtoCart(product.id)}
+                onClick={() => handleAddtoCart(product._id)}
                 style={{
                   border: "none",
                   background: "transparent",
                   fontSize: "20px",
-                  color: addToCart.includes(product.id) ? "blue" : "black",
+                  color: addToCart.includes(product._id) ? "blue" : "black",
                 }}
               >
-                {addToCart.includes(product.id) ? "✅" : "🛒"}
+                {addToCart.includes(product._id) ? "✅" : "🛒"}
               </button>
             </div>
 
-          <Slider {...sliderSettings}>
-            {product.images.map((img, index) => (
-              <div className="zoom-container">
-                <img
-                className="zoom-image"
-                key={index}
-                src={img}
-                alt={`product ${index}`}
-                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '10px' }}
-              />
-              </div>
-            ))}
-          </Slider>
+          {product.images.length > 1 ? (
+  <Slider {...sliderSettings}>
+    {product.images.map((img, index) => (
+      <div className="zoom-container" key={index}>
+        <img
+          className="zoom-image"
+          src={img}
+          alt={`product ${index}`}
+          style={{
+            width: '100%',
+            height: '200px',
+            objectFit: 'cover',
+            borderRadius: '10px'
+          }}
+        />
+      </div>
+    ))}
+  </Slider>
+) : (
+  <div className="zoom-container">
+    <img
+      className="zoom-image"
+      src={product.images[0]}
+      alt="product"
+      style={{
+        width: '100%',
+        height: '200px',
+        objectFit: 'cover',
+        borderRadius: '10px'
+      }}
+    />
+  </div>
+)}
+
 
           <div className="card-body">
             <h5 className="card-title" style={{ color: mode === "light" ? "black" : "white" }}>
@@ -948,18 +1109,20 @@ const handleStock = (id)=>{
             <p className='card-price'>${product.price}</p>
             <p className="text-success">Stock Available: {product.stock}</p>
 
-            <button
+            <Link to={`/product/${product._id}`}>
+              <button
               className="btn btn-primary w-100"
               disabled={product.stock === 0}
               style={{
                 backgroundColor: mode === "light" ? "blue" : "#d9ad9c",
               }}
-              onClick={() => handleStock(product.id)}
+              onClick={() => handleStock(product._id)}
             >
               {product.stock === 0 ? "Out of Stock" : "Buy Now"}
             </button>
+            </Link>
 
-            {showForm && selectedProduct?.id === product.id && (
+            {showForm && selectedProduct?.id === product._id && (
               <div className="mt-3">
                  <ProductPage selectedProduct={selectedProduct} products={products} mode={mode} favorite={favorite} cart={cartProduct} handleFavorite={handleFavorite} handleAddtoCart={handleAddtoCart} ></ProductPage>
               </div>

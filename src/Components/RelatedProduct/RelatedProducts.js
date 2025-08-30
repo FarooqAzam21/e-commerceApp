@@ -5,14 +5,14 @@ import BuyForm from '../BuyForm';
 
 export default function RelatedProducts({ products, mode, handleAddtoCart, handleFavorite, handleStock, favorite, cart , selectedProduct }) {
   const { id } = useParams();
-  const currentProduct = products.find(p => p.id.toString() === id);
+  const currentProduct = products.find(p => p._id.toString() === id);
 
   if (!currentProduct) {
     return <h4 className="text-center text-danger">Current product not found</h4>;
   }
 
   const relatedProducts = products.filter(
-    p => p.category === currentProduct.category && p.id.toString() !== id
+    p => p.category === currentProduct.category && p._id.toString() !== id
   );
   const sliderSettings = {
     arrows: true,

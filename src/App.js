@@ -14,6 +14,7 @@ import ProductPage from './Components/ProductPage/ProductPage';
 import AddProduct from './Components/AddProduct';
 import RelatedProducts from './Components/RelatedProduct/RelatedProducts';
 import { use } from 'react';
+import Botpress from './Components/chatbot/Botpress';
 
 function App() {
   const [showFavorite , setShowFavorite] = useState(false)
@@ -143,7 +144,7 @@ const handleStock = (id)=>{
         alert={alert}
         showAlert={showAlert}
       />
-      <Chatbot/>
+      <Botpress/>
     </>
   } />
   
@@ -174,12 +175,17 @@ const handleStock = (id)=>{
       handleStock={handleStock}
       favorite={favorite}
       cart={addToCart}
+      setProduct={setProducts}
       selectedProduct={selectedProduct}
     />
   } />
 
   <Route path='/admin/dashboard' element={
-    <AddProduct refreshProduct={fetchProducts} loader={setLoader} />
+    <AddProduct 
+    refreshProduct={fetchProducts}
+     loader={setLoader}
+      product={products} 
+    setProduct={setProducts} />
   } />
 </Routes>
 
