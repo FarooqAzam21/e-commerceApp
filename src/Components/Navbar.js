@@ -35,10 +35,12 @@ export default function Navbar({ title , onFavorite , onCart , mode , handleMode
                 <a className="nav-link active" style={{color: mode==='light'? 'black': 'white'}}>About</a>
             </li>
             </ul>
-            <button className="btn btn-primary me-2" 
+            <Link to={"/cart"}>
+                <button className="btn btn-primary me-2" 
                 type="button" onClick={onCart} style={{ backgroundColor: mode==='light'? 'blue': '#d9ad9c'}}>
                 🛒
             </button>
+            </Link>
             <button className="btn me-2" type="button" onClick={onFavorite} style={{ backgroundColor: mode==='light'? 'blue': '#d9ad9c'}}>❤️</button>
             <Link to={'/admin/dashboard/'}>
                 <button className='btn btn-primary'>Add Product</button>

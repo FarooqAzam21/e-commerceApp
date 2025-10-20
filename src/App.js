@@ -1,194 +1,192 @@
 import './App.css';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+import Navbar from './Components/Navbar';
 import Alert from './Components/Alert';
 import Banner from './Components/banner/Banner';
-import Chatbot from './Components/chatbot/Chatbot';
-import Navbar from './Components/Navbar';
 import Products from './Components/Products';
-import { useState , useEffect } from 'react';
-import axios from 'axios';
-import {Routes , Link , Route } from 'react-router-dom';
 import ProductPage from './Components/ProductPage/ProductPage';
 import AddProduct from './Components/AddProduct';
-import RelatedProducts from './Components/RelatedProduct/RelatedProducts';
-import { use } from 'react';
-import Botpress from './Components/chatbot/Botpress';
+import Cart from './Components/Cart';
+import Chatbot from './Components/chatbot/Chatbot';
 
 function App() {
-  const [showFavorite , setShowFavorite] = useState(false)
-  const [alert , setAlert] = useState(null)
-  const [showCartProducts , setshowCartProducts] = useState(false)
-  const [mode, setMode] = useState(() => {
-  return localStorage.getItem('mode') && 'light';
-});
-  const [open , isOpen]=useState(false)
-  const[productCount , setProductCount] = useState(1)
-  const [showForm , setShowForm] = useState(false)
-  const [products, setProducts] = useState([])
-  const [addToCart , setAddToCart] = useState([])
-  const [displayMessage , setDisplayMessage] = useState(false)
-  const [favorite , setFavorite] = useState([])
-  const [selectedProduct , setSelectedProduct]= useState()
-  const [loader , setLoader] = useState(false)
-  const navigate = useNavigate()
-  const fetchProducts = async()=>{
-    setLoader(true)
-    const res = await axios.get("http://localhost:5000/api/products")
-    setProducts(res.data)
-    setLoader(false)
-  }
-  useEffect(()=>{
-    fetchProducts()
-  }, [])
+  const [products, setProducts] = useState([]);
+  const [favorite, setFavorite] = useState([]);
+  const [addToCart, setAddToCart] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [productCount, setProductCount] = useState(1);
+  const [alert, setAlert] = useState(null);
+  const [open, isOpen] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [mode, setMode] = useState(() => localStorage.getItem("mode") || "dark");
   
-  const handleFavorite =(id) =>{
-    if(favorite.includes(id)){
-        setFavorite((prev)=> prev.filter((favid)=> favid !== id))
-        
-    }
-    else {
-        setFavorite((prev)=> [...prev , id])
-        setDisplayMessage((prev)=>!prev)
-        showAlert("product added to Favorite" , "success")
-        setTimeout(() => {
-    setDisplayMessage(false)
-}, 5000);
-    }
-}
-const handleStock = (id)=>{
-    const updated = products.map(product =>{
-        if(product.id === id && product.stock > 0){
-            return {...product, stock: product.stock -1  }
-            }
-            return product;
-    })
-    setProducts(updated)
-    const productToBuy = products.find(p=> p.id === id);
-    if(productToBuy && productToBuy.stock>0){
-        setSelectedProduct(productToBuy)
-        setShowForm(true)
 
+  const navigate = useNavigate();
+
+  // Fetch products
+  const fetchProducts = async () => {
+    try {
+      setLoader(true);
+      const res = await axios.get("http://localhost:5000/api/products");
+      setProducts(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoader(false);
     }
-    setProducts(updated)    
-    navigate(`product/${id}`)
-}
-  const handleAddtoCart=(id)=>{
-    if(addToCart.includes(id)){
-        setAddToCart((prev)=>prev.filter((addtoCartid)=>addtoCartid !==id))
+  };
+
+  useEffect(() => { fetchProducts(); }, []);
+
+  // Derived cart products
+  const cartProducts = Array.isArray(products)
+    ? products.filter((p) => addToCart.includes(p._id?.toString()))
+    : [];
+
+  // Favorite handler
+  const handleFavorite = (id) => {
+    if (favorite.includes(id)) {
+      setFavorite((prev) => prev.filter((fid) => fid !== id));
+    } else {
+      setFavorite((prev) => [...prev, id]);
+      showAlert("Added to Favorite", "success");
     }
-    else{
-        setAddToCart((prev)=>[...prev , id])
-        setDisplayMessage((prev)=>!prev)
-        showAlert("product added to Cart" , "success")
+  };
+
+  // Cart handler
+  const handleAddToCart = (id) => {
+    const idStr = id.toString();
+    if (addToCart.includes(idStr)) {
+      setAddToCart((prev) => prev.filter((cid) => cid !== idStr));
+    } else {
+      setAddToCart((prev) => [...prev, idStr]);
+      showAlert("Added to Cart", "success");
+    }
+  };
+
+  // Stock handler
+  const handleStock = (id) => {
+    const updated = products.map((p) => {
+      if (p._id === id && p.stock > 0) {
+        return { ...p, stock: p.stock - 1 };
       }
-    const updated = products.map((product)=>{
-        if(product.id === id && product.stock>0){
-            return{...product , stock: product.stock-1}
-        }
-        return product
-    })
-}
-  const showAlert=(message , type)=>{
-    setAlert({
-      message : message,
-      type: type
-    })
-    isOpen(prev=> !prev)
-  }
-  const viewFavorite=()=>{
-    setShowFavorite((prev)=>!prev)
-  }
-  const viewCartProducts=()=>{
-    setshowCartProducts((prev)=>!prev)
-  }
-  useEffect(() => {
-  if (mode === 'dark') {
-    document.body.style.background = 'linear-gradient(to right ,rgb(107, 56, 56),rgb(54, 83, 98))';
-  } else {
-    document.body.style.background = 'linear-gradient(to right,rgba(254, 254, 255, 0.66),rgb(101, 170, 205))';
-  }
-}, [mode]);
+      return p;
+    });
+    setProducts(updated);
 
- const handleMode = () => {
-  if (mode === 'light') {
-    setMode('dark');
-    localStorage.setItem('mode', 'dark');
-    showAlert("Dark Mode Enabled", "success");
-  } else {
-    setMode('light');
-    localStorage.setItem('mode', 'light');
-    showAlert("Dark Mode Disabled", "success");
-  }
-}
+    const toBuy = products.find((p) => p._id === id);
+    if (toBuy && toBuy.stock > 0) {
+      setSelectedProduct(toBuy);
+    }
+    navigate(`/product/${id}`);
+  };
+
+  // Alert handler
+  const showAlert = (message, type) => {
+    setAlert({ message, type });
+    isOpen(true);
+    setTimeout(() => isOpen(false), 2000);
+  };
+
+  // Mode handler
+  useEffect(() => {
+    document.body.style.background =
+      mode === "dark"
+        ? "linear-gradient(to right, rgb(107, 56, 56), rgb(54, 83, 98))"
+        : "linear-gradient(to right, rgba(254, 254, 255, 0.66), rgb(101, 170, 205))";
+  }, [mode]);
+
+  const handleMode = () => {
+    const newMode = mode === "light" ? "dark" : "light";
+    setMode(newMode);
+    localStorage.setItem("mode", newMode);
+    showAlert(`${newMode} Mode Enabled`, "success");
+  };
+ 
 
   return (
     <>
-      <Navbar onFavorite={viewFavorite} onCart={viewCartProducts} title="Highfy Electronics" mode={mode} handleMode={handleMode}/>
-        <Alert alert={alert} showAlert={showAlert} loader={loader} open={open} isOpen={isOpen}/>
-      <Routes>
-  <Route path='/' element={
-    <>
-      <Banner />
-      <Products 
-        setLoader={setLoader}
-        productCount={productCount}
-        setProductCount={setProductCount}
-        loader={loader}
-        product={products}
-        showFavorite={showFavorite} 
-        showCartProducts={showCartProducts} 
-        mode={mode} 
+      <Navbar
+        title="Highfy Electronics"
+        mode={mode}
         handleMode={handleMode}
-        alert={alert}
-        showAlert={showAlert}
+        cartCount={addToCart.length}
       />
-      <Botpress/>
-    </>
-  } />
-  
-  <Route path='/products' element={
-    <Products 
-      setLoader={setLoader}
-      productCount={productCount}
-      setProductCount={setProductCount}
-      loader={loader}
-      product={products}
-      showFavorite={showFavorite} 
-      showCartProducts={showCartProducts} 
-      mode={mode} 
-      handleMode={handleMode}
-      alert={alert}
-      showAlert={showAlert}
-    />
-  } />
-  
-
-  <Route path='/product/:id' element={
-    <ProductPage
-      productCount={productCount}
-      mode={mode}
-      products={products}
-      handleFavorite={handleFavorite}
-      handleAddToCart={handleAddtoCart}
-      handleStock={handleStock}
-      favorite={favorite}
-      cart={addToCart}
-      setProduct={setProducts}
-      selectedProduct={selectedProduct}
-    />
-  } />
-
-  <Route path='/admin/dashboard' element={
-    <AddProduct 
-    refreshProduct={fetchProducts}
-     loader={setLoader}
-      product={products} 
-    setProduct={setProducts} />
-  } />
-</Routes>
-
+      <Alert alert={alert} open={open} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Banner />
+              <Products
+                products={products}
+                mode={mode}
+                favorite={favorite}
+                addToCart={addToCart}
+                handleFavorite={handleFavorite}
+                handleAddtoCart={handleAddToCart}
+                handleStock={handleStock}
+                productCount={productCount}
+                setProductCount={setProductCount}
+                
+              />
+              <Chatbot></Chatbot>
+            </>
+          }
+        />
+        <Route
+          path="/product/:id"
+          element={
+            <ProductPage
+              productCount={productCount}
+              mode={mode}
+              products={products}
+              handleFavorite={handleFavorite}
+              handleAddToCart={handleAddToCart}
+              handleStock={handleStock}
+              favorite={favorite}
+              cart={addToCart}
+              setProduct={setProducts}
+              selectedProduct={selectedProduct}
+            />
+          }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AddProduct
+              refreshProduct={fetchProducts}
+              loader={setLoader}
+              products={products}
+              setProduct={setProducts}
+            />
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <Cart
+              products={products}
+              cartProducts={cartProducts}
+              mode={mode}
+              productCount={productCount}
+              setProductCount={setProductCount}
+              handleFavorite={handleFavorite}
+              handleAddToCart={handleAddToCart}
+              handleStock={handleStock}
+              favorite={favorite}
+              alert={alert}
+              showAlert={showAlert}
+            />
+          }
+        />
+      </Routes>
     </>
   );
 }
